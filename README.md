@@ -1,0 +1,1 @@
+# Fabulash api poweraded by django-rest-framework
