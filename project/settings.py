@@ -39,7 +39,8 @@ DJANGO_APPS = [
 ]
 
 THIRTY_PARTY_APPS = [
-    'rest_framework'
+    'rest_framework',
+    'coreapi'
 ]
 
 OWN_APPS = [
