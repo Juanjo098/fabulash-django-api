@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from .models import *
 
+# Default serializers
+
 class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
@@ -56,13 +58,9 @@ class CitaSerializer(serializers.ModelSerializer):
         model = Cita
         fields = '__all__'
 
+# Custom serializers
 
-
-
-
-
-
-
-
-
-
+class LoginSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Usuario
+        fields = ('correo_electronico', 'contrasena')

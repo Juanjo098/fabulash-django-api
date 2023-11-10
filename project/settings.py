@@ -27,7 +27,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 DJANGO_APPS = [
     'django.contrib.admin',
@@ -40,7 +39,8 @@ DJANGO_APPS = [
 
 THIRTY_PARTY_APPS = [
     'rest_framework',
-    'coreapi'
+    'corsheaders',
+    'coreapi',
 ]
 
 OWN_APPS = [
@@ -52,6 +52,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRTY_PARTY_APPS + OWN_APPS
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -122,7 +123,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-mx'
 
 TIME_ZONE = 'UTC'
 
@@ -144,3 +145,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
 }
+
+CORS_ALLOW_ALL_ORIGINS = True

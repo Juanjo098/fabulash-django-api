@@ -8,7 +8,6 @@ class Usuario(models.Model):
     telefono = models.CharField(max_length=10, null=False, unique=True)
     contrasena = models.CharField(max_length=16, null=False)
     hab = models.BooleanField(null=False, default=True)
-
     def _str_(self):
         return f"{self.nombre} {self.apellido} {self.correo_electronico}"
 
