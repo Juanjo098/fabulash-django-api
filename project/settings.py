@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-tqijmza#0kgad7mhu#%z98ylwsmemcv*789mjlp%chlz=ch4$7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 DJANGO_APPS = [
@@ -89,17 +89,27 @@ WSGI_APPLICATION = 'project.wsgi.application'
         #'NAME': BASE_DIR / 'db.sqlite3',
     #}
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.mysql",
+#         "NAME": "fabulashapi",
+#         "USER": "root",
+#         "PASSWORD": "root",
+#         "HOST": "localhost",
+#         "PORT": "3306",
+#     }
+# }
+
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": "fabulashapi",
-        "USER": "root",
-        "PASSWORD": "root",
-        "HOST": "localhost",
-        "PORT": "3306",
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": "avhpuadh",
+        "USER": "avhpuadh",
+        "PASSWORD": "2WL4SS0msNaPrIbR50LdXZGm6jHiwxrE",
+        "HOST": "bubble.db.elephantsql.com",
+        "PORT": "5432",
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
