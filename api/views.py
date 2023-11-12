@@ -70,21 +70,19 @@ class LoginViewSet(viewsets.ModelViewSet):
             )
 
         user = Usuario.objects.filter(correo_electronico=email, contrasena=password).first()
+        serialize_data = UsuarioSerializer(user)
 
         if not user:
             return Response(
-                status=status.HTTP_401_UNAUTHORIZED,
-                data={"message": "El correo y/o la contraseña son incorrectos"}
+                status=status.HTTP_404_NOT_FOUND,
+                data={"message": "El correo y/o la contraseña son incorrectos", "data": None}
             )
 
         return Response(
             status=status.HTTP_200_OK,
             data={
                 "message": "Sesión iniciada",
-                "data": {
-                    "user_id": user.id,
-                    "username": f"{user.nombre} {user.apellido}"
-                }
+                "data": serialize_data.data
             }
         )
 
