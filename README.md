@@ -33,3 +33,8 @@ Ejecutar el Servidor
 ```bash
 py manage.py runserver 0.0.0.0:8000
 ```
+
+Accede a la api a través del navegador con la siguiente ruta:
+```bash
+localhost:8000
+```
