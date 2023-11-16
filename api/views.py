@@ -108,6 +108,37 @@ class CitaViewSet(viewsets.ModelViewSet):
     queryset = Cita.objects.all()
     serializer_class = CitaSerializer
 
+    def list(self, request, *args, **kwargs):
+        id_cliente = self.request.query_params.get('id_cliente')
+
+        if id_cliente:
+            data = Cita.objects.select_related("clvstat", "clvser").filter(clvusu_id=id_cliente)
+
+            response = []
+
+            for d in data:
+                response.append({
+                        "id": d.id,
+                        "fecha": d.fecha,
+                        "hora": d.hora,
+                        "precio_final": d.precio_final,
+                        "hab": d.hab,
+                        "clvusu": d.clvusu.id,
+                        "clvser": d.clvser.id,
+                        "clvpes": d.clvpes.id,
+                        "clvfp": d.clvfp.id,
+                        "clvstat": d.clvstat.id,
+                        "estatus": d.clvstat.nombre,
+                        "servicio": d.clvser.nombre,
+                        "foto": "https://www.plasticoncomposites.com/img/team-placeholder.png",
+                        "empleado": "Guest"
+                    })
+
+            return JsonResponse({"data": response}, status=status.HTTP_200_OK)
+
+        data = CitaSerializer(Cita.objects.all(), many=True).data
+        return Response(status=status.HTTP_200_OK, data=data)
+
 
 class LoginViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
