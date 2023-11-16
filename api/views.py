@@ -3,7 +3,6 @@ from .serializers import *
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 
-
 # Create your views here.
 class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
@@ -32,6 +31,32 @@ class PestanasViewSet(viewsets.ModelViewSet):
 class TarjetaViewSet(viewsets.ModelViewSet):
     queryset = Tarjeta.objects.all()
     serializer_class = TarjetaSerializer
+
+    def list(self, request, *args, **kwargs):
+        id_cliente = self.request.query_params.get('id_cliente')
+        id_tarjeta = self.request.query_params.get('id_tarjeta')
+
+        if not id_cliente and id_tarjeta:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        if id_cliente and not id_tarjeta:
+            tarjetas = Tarjeta.objects.filter(clvusu_id=id_cliente)
+            serialize_data = TarjetaSerializer(tarjetas, many=True)
+
+            return Response(
+                status=status.HTTP_200_OK,
+                data=serialize_data.data
+            )
+
+        if id_cliente and id_tarjeta:
+            tarjeta = Tarjeta.objects.filter(clvusu_id=id_cliente, id=id_tarjeta).first()
+            serialize_data = TarjetaSerializer(tarjeta)
+
+            return Response(
+                status=status.HTTP_200_OK,
+                data=serialize_data.data
+            )
+
 
 class EmpleadoViewSet(viewsets.ModelViewSet):
     queryset = Empleado.objects.all()
