@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 
 from .serializers import *
 from rest_framework import viewsets, status
@@ -27,6 +28,27 @@ class TipoViewSet(viewsets.ModelViewSet):
 class PestanasViewSet(viewsets.ModelViewSet):
     queryset = Pestanas.objects.all()
     serializer_class = PestanasSerializer
+
+    def list(self, request, *args, **kwargs):
+
+        pestanas = Pestanas.objects.prefetch_related('clvtip')
+
+        data = []
+
+        for pestana in pestanas:
+            data.append({
+                "id": pestana.id,
+                "nombre": pestana.nombre,
+                "descripcion": pestana.descripcion,
+                "foto": pestana.foto,
+                "preciopes": pestana.preciopes,
+                "hab": pestana.hab,
+                "tamano": pestana.tamano,
+                "clvtip": pestana.clvtip.id,
+                "tipo": pestana.clvtip.nombre
+            })
+
+        return JsonResponse({'data': data}, status=status.HTTP_207_MULTI_STATUS)
 
 class TarjetaViewSet(viewsets.ModelViewSet):
     queryset = Tarjeta.objects.all()
@@ -62,6 +84,18 @@ class EmpleadoViewSet(viewsets.ModelViewSet):
     queryset = Empleado.objects.all()
     serializer_class = EmpleadoSerializer
 
+    def list(self, request, *args, **kwargs):
+        id_servicio = self.request.query_params.get('id_servicio')
+
+        if id_servicio:
+            empleados = Empleado.objects.filter(servicoempleado__clvser=id_servicio)
+            ser_empleados = EmpleadoSerializer(empleados, many=True).data
+            return Response(status=status.HTTP_200_OK, data=ser_empleados)
+
+        empleados = Empleado.objects.all()
+        ser_empleados = EmpleadoSerializer(empleados, many=True).data
+        return Response(status=status.HTTP_200_OK, data=ser_empleados)
+
 class ServicioViewSet(viewsets.ModelViewSet):
     queryset = Servicio.objects.all()
     serializer_class = ServicioSerializer
@@ -73,6 +107,7 @@ class ServicioEmpleadoViewSet(viewsets.ModelViewSet):
 class CitaViewSet(viewsets.ModelViewSet):
     queryset = Cita.objects.all()
     serializer_class = CitaSerializer
+
 
 class LoginViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()

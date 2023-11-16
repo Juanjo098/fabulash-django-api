@@ -46,6 +46,7 @@ class Pestanas(models.Model):
     foto = models.CharField(max_length=256, default="https://images.squarespace-cdn.com/content/v1/5b9d43fb55b02cec87e4c0ad/1539988476944-U5ZT074DKC5AYSYGXHSY/Screen+Shot+2018-10-19+at+5.32.01+PM.png")
     preciopes = models.FloatField(null=False, default=0)
     hab = models.BooleanField(null=False, default=True)
+    tamano = models.CharField(max_length=8, null=True, blank=False)
     clvtip = models.ForeignKey(Tipo, on_delete=models.CASCADE)
 
     def _str_(self):
