@@ -108,3 +108,11 @@ class Cita(models.Model):
 
     def _str_(self):
         return f"{self.fecha} {self.hora} {self.precio_final}"
+
+class Resena(models.Model):
+    categoria = models.CharField(max_length=32, null=False, blank=False)
+    destino = models.CharField(max_length=64, null=False, blank=False)
+    estrellas = models.PositiveIntegerField(null=False, blank=False, default=1)
+    comentario = models.CharField(max_length=256, null=False, blank=False)
+    def __str__(self):
+        return f"{self.categoria}"

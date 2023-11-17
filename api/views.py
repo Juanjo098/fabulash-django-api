@@ -160,7 +160,7 @@ class LoginViewSet(viewsets.ModelViewSet):
                 data={"message": "Llena los campos"}
             )
 
-        user = Usuario.objects.filter(correo_electronico=email, contrasena=password).first()
+        user = Usuario.objects.filter(correo_electronico=email, contrasena=password, hab=True).first()
         serialize_data = UsuarioSerializer(user)
 
         if not user:
