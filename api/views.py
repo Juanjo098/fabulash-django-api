@@ -185,3 +185,7 @@ class LoginViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+class ResenaViewSet(viewsets.ModelViewSet):
+    queryset = Resena.objects.all()
+    serializer_class = ResenaSerializer

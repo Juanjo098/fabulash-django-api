@@ -64,3 +64,8 @@ class LoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
         fields = ('correo_electronico', 'contrasena')
+
+class ResenaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Resena
+        fields = "__all__"
