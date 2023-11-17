@@ -189,3 +189,13 @@ class LoginViewSet(viewsets.ModelViewSet):
 class ResenaViewSet(viewsets.ModelViewSet):
     queryset = Resena.objects.all()
     serializer_class = ResenaSerializer
+
+    def list(self, request, *args, **kwargs):
+        id_cliente = self.request.query_params.get('id_user')
+
+        if id_cliente:
+            data = ResenaSerializer(Resena.objects.filter(clvuser=id_cliente), many=True).data
+            return Response(status=status.HTTP_200_OK, data=data)
+
+        data = ResenaSerializer(Resena.objects.all(), many=True).data
+        return Response(status=status.HTTP_200_OK, data=data)

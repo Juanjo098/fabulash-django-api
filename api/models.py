@@ -110,9 +110,11 @@ class Cita(models.Model):
         return f"{self.fecha} {self.hora} {self.precio_final}"
 
 class Resena(models.Model):
+    clvuser = models.PositiveIntegerField(blank=False, null=True)
     categoria = models.CharField(max_length=32, null=False, blank=False)
     destino = models.CharField(max_length=64, null=False, blank=False)
     estrellas = models.PositiveIntegerField(null=False, blank=False, default=1)
     comentario = models.CharField(max_length=256, null=False, blank=False)
+    fecha = models.DateTimeField(null=True, blank=False)
     def __str__(self):
         return f"{self.categoria}"
