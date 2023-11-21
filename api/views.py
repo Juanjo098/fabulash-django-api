@@ -113,7 +113,7 @@ class CitaViewSet(viewsets.ModelViewSet):
         id_cliente = self.request.query_params.get('id_cliente')
 
         if id_cliente:
-            data = Cita.objects.select_related("clvstat", "clvser").filter(clvusu_id=id_cliente)
+            data = Cita.objects.select_related("clvstat", "clvser", "clvemp").filter(clvusu_id=id_cliente)
 
             response = []
 
@@ -131,8 +131,8 @@ class CitaViewSet(viewsets.ModelViewSet):
                         "clvstat": d.clvstat.id,
                         "estatus": d.clvstat.nombre,
                         "servicio": d.clvser.nombre,
-                        "foto": "https://www.plasticoncomposites.com/img/team-placeholder.png",
-                        "empleado": "Guest"
+                        "foto": d.clvemp.imagen,
+                        "empleado": f"{d.clvemp.nombre} {d.clvemp.apellido}"
                     })
 
             return JsonResponse({"data": response}, status=status.HTTP_200_OK)

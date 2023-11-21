@@ -105,6 +105,7 @@ class Cita(models.Model):
     clvpes = models.ForeignKey(Pestanas, on_delete=models.CASCADE, null=True)
     clvfp = models.ForeignKey(FormaPago, on_delete=models.CASCADE, null=False)
     clvstat = models.ForeignKey(Estatus, on_delete=models.CASCADE, null=False)
+    clvemp = models.ForeignKey(Empleado, on_delete=models.CASCADE, null=False)
 
     def _str_(self):
         return f"{self.fecha} {self.hora} {self.precio_final}"
