@@ -49,7 +49,7 @@ class PestanasViewSet(viewsets.ModelViewSet):
                 "tipo": pestana.clvtip.nombre
             })
 
-        return JsonResponse({'data': data}, status=status.HTTP_207_MULTI_STATUS)
+        return JsonResponse({'data': data}, status=status.HTTP_200_OK)
 
 class TarjetaViewSet(viewsets.ModelViewSet):
     queryset = Tarjeta.objects.all()
