@@ -1,14 +1,17 @@
+import locale
+from datetime import datetime
+
 from django.http import JsonResponse
 
 from .serializers import *
 from rest_framework import viewsets, status
 from rest_framework.response import Response
+from rest_framework.generics import ListAPIView
 
 # Create your views here.
 class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
-
 
 class FormaPagoViewSet(viewsets.ModelViewSet):
     queryset = FormaPago.objects.all()
@@ -139,6 +142,91 @@ class CitaViewSet(viewsets.ModelViewSet):
 
         data = CitaSerializer(Cita.objects.all(), many=True).data
         return Response(status=status.HTTP_200_OK, data=data)
+
+
+class ProximaListApiView(viewsets.ModelViewSet):
+    queryset = Cita.objects.all()
+    serializer_class = CitaSerializer
+
+    def cita_mas_cercana(self, lista_citas):
+        ahora = datetime.now()
+        tiempo_minimo = float('inf')
+        index = -1
+
+        for i, cita in enumerate(lista_citas): # Suponiendo que la fecha y la hora están separadas por un espacio en la lista
+
+            fecha_cita = datetime.strptime(f"{cita['fecha']} {cita['hora']}", '%Y-%m-%d %H:%M:%S')
+            tiempo_hasta_cita = fecha_cita - ahora
+
+
+            # Si la cita está en el futuro y es más cercana que la actualmente registrada
+            if tiempo_hasta_cita.total_seconds() > 0 and tiempo_hasta_cita.total_seconds() < tiempo_minimo:
+                tiempo_minimo = tiempo_hasta_cita.total_seconds()
+                index = i
+
+        if index == -1:
+            return []
+
+        return lista_citas[index]
+
+    def obtener_nombre_mes(self, fecha):
+        try:
+            # Establecer la configuración regional a español
+            locale.setlocale(locale.LC_TIME, 'es_ES.utf-8')
+
+            # Obtener el nombre del mes en español
+            nombre_mes = fecha.strftime('%B')
+
+            return nombre_mes.title()
+        except AttributeError:
+            return "Formato de fecha incorrecto"
+
+    def list(self, request, *args, **kwargs):
+        id_cliente = self.request.query_params.get('id_cliente')
+
+        if not id_cliente:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        citas = Cita.objects.prefetch_related("clvstat").filter(clvusu_id=id_cliente, clvstat=1)
+        citas_formatedas = []
+
+        for cita in citas:
+            citas_formatedas.append({
+                "fecha": cita.fecha,
+                "hora": cita.hora,
+                "estatus": cita.clvstat.nombre
+            })
+
+        proxima_cita = self.cita_mas_cercana(citas_formatedas)
+
+        if not proxima_cita:
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        data = {
+            "mes": self.obtener_nombre_mes(proxima_cita['fecha']),
+            "dia": proxima_cita["fecha"].day,
+            "hora": proxima_cita["hora"].strftime("%H:%M"),
+            "estatus": proxima_cita["estatus"]
+        }
+
+        return JsonResponse({"data": data}, status=status.HTTP_200_OK)
+
+
+
+    def retrieve(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def update(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def partial_update(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def create(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def destroy(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 class LoginViewSet(viewsets.ModelViewSet):

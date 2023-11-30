@@ -16,6 +16,7 @@ router.register(r'servicioempleado', views.ServicioEmpleadoViewSet)
 router.register(r'cita', views.CitaViewSet)
 router.register(r'login', views.LoginViewSet)
 router.register(r'resenas', views.ResenaViewSet)
+router.register(r'proxima-cita', views.ProximaListApiView)
 
 urlpatterns = [
     path('', include(router.urls)),
