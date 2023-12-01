@@ -153,6 +153,9 @@ class ProximaListApiView(viewsets.ModelViewSet):
         tiempo_minimo = float('inf')
         index = -1
 
+        if len(lista_citas) == 1:
+            return lista_citas[0]
+
         for i, cita in enumerate(lista_citas): # Suponiendo que la fecha y la hora están separadas por un espacio en la lista
 
             fecha_cita = datetime.strptime(f"{cita['fecha']} {cita['hora']}", '%Y-%m-%d %H:%M:%S')
@@ -186,6 +189,8 @@ class ProximaListApiView(viewsets.ModelViewSet):
 
         if not id_cliente:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        print(id_cliente)
 
         citas = Cita.objects.prefetch_related("clvstat").filter(clvusu_id=id_cliente, clvstat=1)
         citas_formatedas = []
