@@ -114,6 +114,16 @@ class CitaViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         id_cliente = self.request.query_params.get('id_cliente')
+        fecha = self.request.query_params.get('fecha')
+
+        if fecha:
+            dates = Cita.objects.filter(fecha=fecha)
+            if dates:
+                data = []
+                for date in dates:
+                    data.append(date.hora.strftime('%H:%M'))
+                return JsonResponse({"data": data}, status=status.HTTP_200_OK)
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
         if id_cliente:
             data = Cita.objects.select_related("clvstat", "clvser", "clvemp").filter(clvusu_id=id_cliente)
@@ -142,7 +152,6 @@ class CitaViewSet(viewsets.ModelViewSet):
 
         data = CitaSerializer(Cita.objects.all(), many=True).data
         return Response(status=status.HTTP_200_OK, data=data)
-
 
 class ProximaListApiView(viewsets.ModelViewSet):
     queryset = Cita.objects.all()
